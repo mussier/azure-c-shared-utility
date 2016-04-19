@@ -18,6 +18,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX TRUE)
 endif()
 
+#Enable custom find scripts
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/cmake/")
+
 include (CTest)
 
 #these are the include folders
@@ -282,6 +285,15 @@ function(set_platform_files)
         set(THREAD_C_FILE ${CMAKE_CURRENT_LIST_DIR}/adapters/threadapi_pthreads.c PARENT_SCOPE)
         set(TICKCOUTER_C_FILE ${CMAKE_CURRENT_LIST_DIR}/adapters/tickcounter_linux.c PARENT_SCOPE)
         set(UNIQUEID_C_FILE ${CMAKE_CURRENT_LIST_DIR}/adapters/uniqueid_linux.c PARENT_SCOPE)
+        if( ${use_openssl})
+            find_package(OpenSSL REQUIRED)
+        endif()
+        find_package(Threads REQUIRED)
+        find_package(ZLIB REQUIRED)
+        find_package(UUID REQUIRED)
+        if( ${use_http})
+            find_package(CURL REQUIRED)
+        endif()
     endif()
 endfunction(set_platform_files)
 
@@ -459,7 +471,7 @@ if(${use_http})
             target_link_libraries(aziotsharedutil winhttp.lib)
         endif()
     else()
-        target_link_libraries(aziotsharedutil curl)
+        target_link_libraries(aziotsharedutil ${CURL_LIBRARIES})
     endif()
 endif()
 
@@ -472,7 +484,7 @@ endif()
 if(${use_openssl})
     if (WIN32)
     else()
-        target_link_libraries(aziotsharedutil ssl crypto)
+        target_link_libraries(aziotsharedutil ${OPENSSL_LIBRARIES})
     endif()
 endif()
 
@@ -482,7 +494,7 @@ endif()
 
 if(WIN32)
 else()
-    target_link_libraries(aziotsharedutil pthread)
+    target_link_libraries(aziotsharedutil ${CMAKE_THREAD_LIBS_INIT})
 endif()
 
 if (NOT ${skip_unittests})
