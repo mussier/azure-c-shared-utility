@@ -5,6 +5,8 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 compileAsC11()
+find_package(Threads REQUIRED)
+
 set(theseTestsName condition_unittests)
 
 set(${theseTestsName}_cpp_files
@@ -25,6 +27,6 @@ build_test_artifacts(${theseTestsName} ON)
 
 if(WIN32)
 else()
-    target_link_libraries(${theseTestsName}_exe pthread)
+    target_link_libraries(${theseTestsName}_exe ${CMAKE_THREAD_LIBS_INIT} rt)
 endif()
 
