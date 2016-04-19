@@ -19,7 +19,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 
 #Enable custom find scripts
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/cmake/")
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/cmake_finders/")
 
 include (CTest)
 
@@ -290,6 +290,7 @@ function(set_platform_files)
         endif()
         find_package(Threads REQUIRED)
         find_package(ZLIB REQUIRED)
+        find_package(RT REQUIRED)
         find_package(UUID REQUIRED)
         include_directories("${LIBUUID_INCLUDE_DIRS}")
         if( ${use_http})
