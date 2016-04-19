@@ -5,6 +5,7 @@
 cmake_minimum_required(VERSION 2.8.11)
 
 compileAsC11()
+find_package(UUID REQUIRED)
 set(theseTestsName uniqueid_unittests)
 
 if(WIN32)
@@ -30,8 +31,5 @@ if(WIN32)
     target_link_libraries(${theseTestsName}_exe rpcrt4.lib)
     target_link_libraries(${theseTestsName}_dll rpcrt4.lib)
 else()
-    find_package(PkgConfig REQUIRED)
-    pkg_search_module(UIDLINUX REQUIRED uuid)
-
-    target_link_libraries(${theseTestsName}_exe uuid)
+    target_link_libraries(${theseTestsName}_exe ${LIBUUID_LIBRARIES})
 endif()
