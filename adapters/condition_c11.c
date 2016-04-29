@@ -65,11 +65,12 @@ COND_RESULT Condition_Wait(COND_HANDLE handle, LOCK_HANDLE lock, int timeout_mil
         {
             struct xtime tm;
             int wait_result;
-            time_t now = get_time(NULL);
+            xtime_get(&tm, TIME_UTC);
 
             // Codes_SRS_CONDITION_18_013: [ Condition_Wait shall accept relative timeouts ]
-            tm.sec = (unsigned long)get_difftime(now, (time_t)0) + (timeout_milliseconds / 1000);
-            tm.nsec = (timeout_milliseconds % 1000) * 1000000L;
+            tm.sec += (timeout_milliseconds / 1000);
+            tm.nsec += (timeout_milliseconds % 1000) * 1000000L;
+
             wait_result = cnd_timedwait((cnd_t *)handle, (mtx_t*)lock, &tm);
             if (wait_result == thrd_timedout)
             {
@@ -83,7 +84,7 @@ COND_RESULT Condition_Wait(COND_HANDLE handle, LOCK_HANDLE lock, int timeout_mil
             }
             else
             {
-                LogError("Failed to Condition_Wait\r\n");
+                LogError("Failed to Condition_Wait");
                 result = COND_ERROR;
             }
         }
@@ -91,7 +92,7 @@ COND_RESULT Condition_Wait(COND_HANDLE handle, LOCK_HANDLE lock, int timeout_mil
         {
             if (cnd_wait((cnd_t*)handle, (mtx_t *)lock) != thrd_success)
             {
-                LogError("Failed to cnd_wait\r\n");
+                LogError("Failed to cnd_wait");
                 result = COND_ERROR;
             }
             else

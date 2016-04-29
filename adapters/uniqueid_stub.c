@@ -7,7 +7,7 @@
 #include "azure_c_shared_utility/iot_logging.h"
 #include <time.h>
 
-DEFINE_ENUM_STRINGS(UNIQUEIDS_RESULT, UNIQUEIDS_RESULT_VALUES);
+DEFINE_ENUM_STRINGS(UNIQUEID_RESULT, UNIQUEID_RESULT_VALUES);
 
 static const char tochar[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 static void generate128BitUUID(unsigned char* arrayOfByte)
@@ -44,7 +44,7 @@ UNIQUEID_RESULT UniqueId_Generate(char* uid, size_t len)
     if (uid == NULL || len < 37)
     {
         result = UNIQUEID_INVALID_ARG;
-        LogError("Buffer Size is Null or length is less then 37 bytes\r\n");
+        LogError("Buffer Size is Null or length is less then 37 bytes");
     }
     else 
     {
